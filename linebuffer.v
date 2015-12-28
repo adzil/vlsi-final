@@ -1,4 +1,4 @@
-module linebuffer (clk, rst, ena, tarray, iarray, valid, xpos, ypos);
+module linebuffer (clk, rst, ena, tarray, iarray, valid, xpos, ypos, mark);
     
     // Control line input
     input clk;
@@ -16,11 +16,11 @@ module linebuffer (clk, rst, ena, tarray, iarray, valid, xpos, ypos);
     output reg valid = 1'd0;
     output reg [9:0] xpos = 10'd0;
     output reg [9:0] ypos = 10'd0;
+    output reg mark = 1'd1;
     
     // Addressing input to ROM
     reg [18:0] iaddr = 19'd0;
     reg [5:0] taddr = 6'd0;
-    
     
     rom_input rom_input_inst(
         .address (iaddr),
@@ -45,11 +45,12 @@ module linebuffer (clk, rst, ena, tarray, iarray, valid, xpos, ypos);
     
     always @ (posedge clk or negedge rst) begin
         if (!rst) begin
-            valid = 1'd0;
-            xpos = 10'd0;
-            ypos = 10'd0;
-            iaddr = 19'd0;
-            taddr = 6'd0;
+            valid <= 1'd0;
+            xpos <= 10'd0;
+            ypos <= 10'd0;
+            iaddr <= 19'd0;
+            taddr <= 6'd0;
+            mark <= 1'd1;
         end
         else
         if (!ena) begin
@@ -60,10 +61,14 @@ module linebuffer (clk, rst, ena, tarray, iarray, valid, xpos, ypos);
                 iaddr <= iaddr + 19'd1;
             
             // Template address pointer
-            if (taddr == 6'd39)
+            if (taddr == 6'd39) begin
                 taddr <= 6'd0;
-            else
+                mark <= 1'd1;
+            end
+            else begin
                 taddr <= taddr + 6'd1;
+                mark <= 1'd0;
+            end
             
             // X and Y position locator
             if (xpos == 10'd639) begin

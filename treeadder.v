@@ -15,8 +15,7 @@ module treeadder(din, dout);
     output [NDATA_LOG:0] dout;
 
    	/* Wire/register declaration */
-    wire [NDATA-1:0] buffer = {NDATA{1'd0}};
-    assign buffer = {din[NDATA_IN-1:0], {(NDATA-NDATA_IN){1'd0}}};
+    wire [NDATA-1:0] buffer = {din[NDATA_IN-1:0], {(NDATA-NDATA_IN){1'd0}}};
 	
     /* Generator definition */
     genvar i,x;
