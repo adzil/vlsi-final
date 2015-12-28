@@ -1,0 +1,8 @@
+# Ignore compiled files
+/db
+/incremental_db
+/*tmp*
+/output_files
+
+# Ignore backup files
+*.bak
