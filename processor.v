@@ -1,9 +1,8 @@
-module processor(iarray, tarray, mark, valid, clk, rst, ena, tout, markout, sign);
+module processor(iarray, tarray, mark, clk, rst, ena, tout, markout, sign);
 
     input [99:0] iarray;
     input [99:0] tarray;
     input mark;
-    input valid;
     input clk;
     input rst;
     input ena;
@@ -19,7 +18,7 @@ module processor(iarray, tarray, mark, valid, clk, rst, ena, tout, markout, sign
     wire adder_next;
     
     assign xcorr = iarray ^ tarray;
-    assign adder_next = !result[8] & valid;
+    assign adder_next = !result[8];
     
     treeadder treeadder_inst(
         .din (xcorr),

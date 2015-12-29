@@ -3,6 +3,8 @@
 /incremental_db
 /*tmp*
 /output_files
+/simulation
 
 # Ignore backup files
 *.bak
+*simulation*

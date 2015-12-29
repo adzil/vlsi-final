@@ -14,6 +14,11 @@ module processor_array(clk, rst, ena, xpos, ypos);
     wire [39:0] sign;
     wire [9:0] xcpos;
     wire [9:0] ycpos;
+    wire [10:0] xminpos;
+    wire [10:0] yminpos;
+    
+    assign xminpos = {1'd0, xcpos} - 11'd40;
+    assign yminpos = {1'd0, ycpos} - 11'd100;
     
     linebuffer linebuffer_inst (
         .clk (clk),
@@ -34,7 +39,6 @@ module processor_array(clk, rst, ena, xpos, ypos);
                 .iarray (iarray),
                 .tarray (tarray[i*100 +: 100]),
                 .mark (mark[i]),
-                .valid (valid),
                 .clk (clk),
                 .rst (rst),
                 .ena (ena),
@@ -53,9 +57,9 @@ module processor_array(clk, rst, ena, xpos, ypos);
         end
         else
         if (!ena) begin
-            if (sign != 40'd0) begin
-                xpos <= xcpos - 10'd40;
-                ypos <= ycpos - 10'd100;
+            if ((sign != 40'd0) & valid) begin
+                xpos <= xminpos[9:0];
+                ypos <= yminpos[9:0];
             end
             else begin
                 xpos <= xpos;

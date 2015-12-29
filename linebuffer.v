@@ -22,22 +22,27 @@ module linebuffer (clk, rst, ena, tarray, iarray, valid, xpos, ypos, mark);
     reg [18:0] iaddr = 19'd0;
     reg [5:0] taddr = 6'd0;
     
+    // Reverse clken
+    wire clken;
+    
+    assign clken = !ena;
+    
     rom_input rom_input_inst(
         .address (iaddr),
-        .clken (ena),
+        .clken (clken),
         .clock (clk),
         .q (idata)
     );
     
     rom_template rom_template_inst(
         .address (taddr),
-        .clken (ena),
+        .clken (clken),
         .clock (clk),
         .q (tarray)
     );
     
     sreg_input sreg_input_inst(
-        .clken (ena),
+        .clken (clken),
         .clock (clk),
         .shiftin (idata),
         .taps (iarray)
@@ -81,7 +86,7 @@ module linebuffer (clk, rst, ena, tarray, iarray, valid, xpos, ypos, mark);
             else
                 xpos <= xpos + 10'd1;
             
-            valid <= (xpos < 10'd40) | (ypos < 10'd100);
+            valid <= !((xpos < 10'd40) | (ypos < 10'd100));
         end
     end
 
